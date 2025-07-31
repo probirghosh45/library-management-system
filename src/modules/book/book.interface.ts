@@ -1,3 +1,5 @@
+import { Model } from "mongoose";
+
 export interface Ibooks{
  title : string,
  author : string,
@@ -8,3 +10,6 @@ export interface Ibooks{
  available ?: boolean
 }
 
+export interface BookModel extends Model<Ibooks> {
+  decreaseCopies(bookId: string, quantity: number): Promise<void>;
+}

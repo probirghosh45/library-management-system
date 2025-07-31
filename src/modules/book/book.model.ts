@@ -1,6 +1,5 @@
 import { Schema, model } from "mongoose";
-import { Ibooks } from "./book.interface";
-
+import { BookModel, Ibooks } from "./book.interface";
 
 // Step 1 : Schema Define
 const booksSchema = new Schema<Ibooks>(
@@ -20,7 +19,14 @@ const booksSchema = new Schema<Ibooks>(
     genre: {
       type: String,
       required: true,
-      enum: ["FICTION", "NON_FICTION", "SCIENCE", "HISTORY", "BIOGRAPHY", "FANTASY"],
+      enum: [
+        "FICTION",
+        "NON_FICTION",
+        "SCIENCE",
+        "HISTORY",
+        "BIOGRAPHY",
+        "FANTASY",
+      ],
     },
     isbn: {
       type: String,
@@ -47,11 +53,22 @@ const booksSchema = new Schema<Ibooks>(
   }
 );
 
+booksSchema.statics.decreaseCopies = async function (
+  bookId: string,
+  quantity: number
+) {
+  const book = await this.findById(bookId);
+  if (!book || book.copies < quantity) {
+    throw new Error("Not Enough Copies available");
+  }
+  book.copies -= quantity;
+
+  if (book.copies === 0) {
+    book.available = false;
+  }
+  await book.save()
+};
+
 // Step 2 : Model Create and Export
-const Book = model<Ibooks>('Book', booksSchema);
+const Book = model<Ibooks,BookModel>("Book", booksSchema);
 export default Book;
-
-
-
-
-
