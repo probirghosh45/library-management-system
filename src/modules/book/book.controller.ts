@@ -86,4 +86,36 @@ const getBookById = async (req: Request, res: Response) => {
   }
 };
 
-export { createBook, getAllBooks,getBookById };
+ //Update Book
+
+ const updateBook = async (req: Request, res: Response) => {
+  try {
+    const { bookId } = req.params;
+    const updateData = req.body;
+
+    const updatedBook = await Book.findByIdAndUpdate(bookId, updateData, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!updatedBook) {
+      return res.status(404).json({
+        success: false,
+        message: "Book not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Book updated successfully",
+      data: updatedBook,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to update book",
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
+  }
+};
+export { createBook, getAllBooks,getBookById,updateBook };
