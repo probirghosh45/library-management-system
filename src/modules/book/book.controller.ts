@@ -62,7 +62,7 @@ const getAllBooks = async (req: Request, res: Response) => {
 const getBookById = async (req: Request, res: Response) => {
   try {
     const { bookId } = req.params;
-    console.log("id",bookId)
+    // console.log("id",bookId)
     const book = await Book.findById(bookId);
     if (book) {
       res.status(201).json({
@@ -118,4 +118,33 @@ const getBookById = async (req: Request, res: Response) => {
     });
   }
 };
-export { createBook, getAllBooks,getBookById,updateBook };
+
+//Delete Book
+const deleteBook = async (req: Request, res: Response) => {
+  try {
+    const { bookId } = req.params;
+    const deletedBook = await Book.findByIdAndDelete(bookId);
+
+    if (!deletedBook) {
+      return res.status(404).json({
+        success: false,
+        message: 'Book not found',
+        data: null,
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Book deleted successfully',
+      data: null,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Failed to delete book',
+      error: error,
+    });
+  }
+};
+
+export { createBook, getAllBooks,getBookById,updateBook,deleteBook };
