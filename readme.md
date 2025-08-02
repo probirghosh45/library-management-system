@@ -81,6 +81,7 @@ Server will start at: http://localhost:5000
 
 ### ⚙️ Project Structure
 
+```bash
 library-management-system/
 ├── .env
 ├── .gitignore
@@ -99,6 +100,7 @@ library-management-system/
 │   │   └── routes/
 │   └── utils/
 
+```
 
 ### ✅ Sample Request to Borrow a Book
 Request
