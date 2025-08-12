@@ -1,42 +1,40 @@
 import express from "express";
-import cors from "cors"
+import cors from "cors";
 import mongoose from "mongoose";
 import config from "./config";
 import routes from "./modules/routes";
 
+const app = express();
 
+const corsOptions = {
+  origin: ['http://localhost:5173', 'http://localhost:5174','https://library-management-three-livid.vercel.app'],
+  credentials: true,
+  optionSuccessStatus: 200,
+}
+app.use(cors(corsOptions))
+app.use(express.json());
+app.use(routes);
 
-const app = express()
-
-app.use(
-  cors({
-    origin: ['http://localhost:5173', '***']
-   })
-);
-app.use(express.json())
-app.use(routes)
-
-
-app.get("/",(req,res)=>{
-    res.send({
-        success : true, 
-        message : "This is library management system project" 
-    })
-})
+app.get("/", (req, res) => {
+  res.send({
+    success: true,
+    message: "This is library management system project",
+  });
+});
 
 const port = config.port || 5000;
-app.listen(port,()=>{
-    console.log(`Server is running on port ${port}`)
-})
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
 
-async function server(){
-    try {
-        // console.log(config)
-        await mongoose.connect(config.database_url!)
-        console.log("Connected to Database")
-    } catch (error) {
-        console.log(`Server error ${server}`)
-    }
+async function server() {
+  try {
+    // console.log(config)
+    await mongoose.connect(config.database_url!);
+    console.log("Connected to Database");
+  } catch (error) {
+    console.log(`Server error ${server}`);
+  }
 }
 
-server()
+server();
